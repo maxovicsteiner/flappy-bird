@@ -1,0 +1,46 @@
+.bird {
+  height: 60px;
+  width: 60px;
+  position: absolute;
+  background-image: url("./assets/flappy-bird.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.pipe {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  background-color: transparent;
+  height: max-content;
+}
+
+.pipe > div.collision {
+  background-color: rgb(41, 85, 41);
+  width: 100%;
+  height: 500px;
+}
+
+.pipe > div.passage {
+  height: 150px;
+  width: 100%;
+  background-color: transparent;
+}
+
+#game {
+  overflow: hidden;
+  width: 1000px;
+  height: 500px;
+  border: 1px solid lightblue;
+  border-bottom: 100px solid lightgreen;
+  background-color: lightblue;
+  position: relative;
+}
+
+#pipes {
+  height: 100%;
+  width: max-content;
+  display: flex;
+  gap: 200px;
+}
