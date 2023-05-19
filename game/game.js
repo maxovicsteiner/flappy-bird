@@ -4,7 +4,7 @@ let birds = [];
 let pipes = [];
 
 function randomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return Math.random() * (max - min) + min;
 }
 
 class Bird {
@@ -58,9 +58,14 @@ class Bird {
 }
 
 class Pipe {
-  constructor() {
+  constructor(options) {
     let shift = randomNumber(15, 40);
+    let y = (shift / 100) * 1150;
+    this.y = -y + 500;
     this.sketch = document.createElement("div");
+    pipes.push(this);
+    this.x = (pipes.length - 1) * 300 + 200;
+    if (options && options.initial) this.x += 500;
     this.sketch.classList.add("pipe");
     let topPipe = document.createElement("div");
     let bottomPipe = document.createElement("div");
@@ -71,26 +76,32 @@ class Pipe {
     this.sketch.appendChild(topPipe);
     this.sketch.appendChild(passage);
     this.sketch.appendChild(bottomPipe);
-    this.sketch.style.transform = `translateY(${shift * -1}%)`;
+    this.sketch.style.left = `${this.x}px`;
+    this.sketch.style.transform = `translateY(${-shift}%)`;
     pipes_HTML.appendChild(this.sketch);
-    pipes.push(this);
+  }
+
+  delete() {
+    this.sketch.remove();
   }
 }
 
 const birdA = new Bird();
 
-for (let i = 0; i < 20; i++) {
-  let temp = new Pipe();
+for (let _i = 0; _i < 4; _i++) {
+  new Pipe({ initial: true });
 }
+let game_over = false;
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === " ") {
+  if (e.key === " " && !game_over) {
     birdA.flap();
   }
 });
 
 let counter = 0;
-setInterval(() => {
+
+const gameId = setInterval(() => {
   for (let i = 0; i < birds.length; i++) {
     if (birds[i].y <= 0) {
       birds[i].y = 0;
@@ -101,5 +112,27 @@ setInterval(() => {
     }
   }
   counter++;
-  pipes_HTML.style.transform = `translateX(${counter * -1}px)`;
+
+  for (let i = 0; i < pipes.length; i++) {
+    pipes[i].x -= 1;
+    pipes[i].sketch.style.left = pipes[i].x + "px";
+    if (pipes[i].x + 100 <= 0) {
+      pipes[i].delete();
+      pipes.shift();
+    }
+    if (birdA.x - pipes[i].x <= 100 && birdA.x + 60 - pipes[i].x >= 0) {
+      if (
+        !(birdA.y - pipes[i].y <= 150 && birdA.y - pipes[i].y >= 0) ||
+        birdA.y - pipes[i].y >= 110
+      ) {
+        game_over = true;
+        clearInterval(gameId);
+      }
+    }
+    if (birdA.y + 40 === 500) {
+      game_over = true;
+      clearInterval(gameId);
+    }
+    if (pipes.length < 4) new Pipe();
+  }
 }, 1);

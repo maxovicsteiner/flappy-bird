@@ -1,11 +1,12 @@
 .bird {
-  height: 60px;
+  height: 40px;
   width: 60px;
   position: absolute;
   background-image: url("./assets/flappy-bird.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  z-index: 999;
 }
 
 .pipe {
@@ -14,6 +15,7 @@
   width: 100px;
   background-color: transparent;
   height: max-content;
+  position: absolute;
 }
 
 .pipe > div.collision {
@@ -26,6 +28,13 @@
   height: 150px;
   width: 100%;
   background-color: transparent;
+}
+
+.debug {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  position: absolute;
 }
 
 #game {
@@ -43,4 +52,5 @@
   width: max-content;
   display: flex;
   gap: 200px;
+  display: relative;
 }
