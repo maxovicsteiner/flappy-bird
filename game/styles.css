@@ -54,3 +54,16 @@
   gap: 200px;
   display: relative;
 }
+
+#score::before {
+  content: 'Current:'
+}
+
+#high_score::before {
+  content: 'Highest:'
+}
+
+h2 {
+  font-size: 2rem;
+  font-family: monospace;
+}
