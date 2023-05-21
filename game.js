@@ -150,6 +150,12 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+document.addEventListener("click", () => {
+  if (!game_over) {
+    birdA.flap();
+  }
+});
+
 start();
 
 const gameInteralId = setInterval(() => {

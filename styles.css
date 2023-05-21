@@ -1,3 +1,7 @@
+* {
+  user-select: none;
+}
+
 .bird {
   height: 40px;
   width: 60px;
@@ -56,11 +60,11 @@
 }
 
 #score::before {
-  content: 'Current:'
+  content: "Current:";
 }
 
 #high_score::before {
-  content: 'Highest:'
+  content: "Highest:";
 }
 
 h2 {
