@@ -87,7 +87,7 @@ class Pipe {
     this.sketch.classList.add("pipe");
     pipes.push(this);
 
-    this.x = (pipes.length - 1) * 300 + 200;
+    this.x = (pipes.length - 1) * 350 + 250;
     if (options && options.initial) this.x += 500;
 
     let topPipe = document.createElement("div");
