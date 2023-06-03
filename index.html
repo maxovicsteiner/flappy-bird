@@ -5,12 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="game.js" defer></script>
+    <script src="cmp/index.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
     <title>Document</title>
   </head>
   <body>
-    <h2 id="score"></h2>
-    <h2 id="high_score"></h2>
+    <div class="scores">
+      <div class="player">
+        <h1>Player</h1>
+        <h2 id="score"></h2>
+        <h2 id="high_score"></h2>
+      </div>
+      <div class="cmp_player">
+        <h1>CMP</h1>
+        <h2 id="cmp_score"></h2>
+        <h2 id="cmp_high_score"></h2>
+      </div>
+    </div>
     <div id="game">
       <div id="pipes"></div>
     </div>

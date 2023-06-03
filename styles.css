@@ -13,6 +13,11 @@
   z-index: 999;
 }
 
+.cmp {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
 .pipe {
   display: flex;
   flex-direction: column;
@@ -67,7 +72,25 @@
   content: "Highest:";
 }
 
+#cmp_score::before {
+  content: "Current:";
+}
+
+#cmp_high_score::before {
+  content: "Highest:"
+}
+
+
 h2 {
-  font-size: 2rem;
   font-family: monospace;
+}
+
+.scores {
+  display: flex;
+  gap: 2rem;
+}
+
+h1 {
+  font-family: monospace;
+  color: red;
 }
