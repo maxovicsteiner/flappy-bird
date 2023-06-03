@@ -2,19 +2,35 @@ const game = document.getElementById("game");
 const pipes_HTML = document.getElementById("pipes");
 const score_HTML = document.getElementById("score");
 const high_score_HTML = document.getElementById("high_score");
+const cmp_score_HTML = document.getElementById("cmp_score");
+const cmp_high_score_HTML = document.getElementById("cmp_high_score");
+
 let birds = [];
 let pipes = [];
 let game_over = false;
 let score = 0;
+let cmp_score = 0;
+let cmp_high_score = 0;
 
 score_HTML.innerText = score;
+cmp_score_HTML.innerText = cmp_score;
 
 function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+let startCmp = true;
+
+// this function is just to restart the cmp
+function restart() {
+  startCmp = false;
+  setTimeout(() => {
+    startCmp = true;
+  }, 100);
+}
+
 class Bird {
-  constructor() {
+  constructor(isPlayable) {
     this.x = 100;
     this.y = 100;
 
@@ -27,6 +43,10 @@ class Bird {
     this.isFlapping = false;
 
     birds.push(this);
+
+    if (!isPlayable) {
+      this.sketch.classList.add("cmp");
+    }
   }
   flap() {
     if (this.y <= 0) {
@@ -66,6 +86,12 @@ class Bird {
         clearInterval(fallIntervalId);
       }
     }, 1);
+  }
+
+  delete() {
+    // delete from array and delete sketch
+    birds = birds.filter((bird) => bird !== this);
+    this.sketch.remove();
   }
 
   set coordinates([x, y]) {
@@ -113,9 +139,19 @@ class Pipe {
   }
 }
 
-const birdA = new Bird();
+let birdA;
+let birdB;
 
 function start() {
+  birdB = new Bird();
+  birdA = new Bird(true);
+
+  restart();
+
+  let cmp_high_score =
+    localStorage.getItem("cmp_high_score") &&
+    JSON.parse(localStorage.getItem("cmp_high_score"));
+
   let high_score =
     localStorage.getItem("high_score") &&
     JSON.parse(localStorage.getItem("high_score"));
@@ -129,9 +165,24 @@ function start() {
     high_score = score;
     localStorage.setItem("high_score", JSON.stringify(score));
   }
+
+  if (cmp_high_score) {
+    if (cmp_score > cmp_high_score) {
+      cmp_high_score = cmp_score;
+      localStorage.setItem("cmp_high_score", JSON.stringify(cmp_score));
+    }
+  } else {
+    cmp_high_score = cmp_score;
+    localStorage.setItem("cmp_high_score", JSON.stringify(cmp_score));
+  }
+
   high_score_HTML.innerText = high_score;
   score = 0;
   score_HTML.innerText = score;
+
+  cmp_high_score_HTML.innerText = cmp_high_score;
+  cmp_score = 0;
+  cmp_score_HTML.innerText = cmp_score;
 
   for (let i = 0; i < pipes.length; i++) {
     pipes[i].delete();
@@ -141,7 +192,6 @@ function start() {
   for (let _i = 0; _i < 4; _i++) {
     new Pipe({ initial: true });
   }
-  birdA.isFlapping = true;
 }
 
 document.addEventListener("keydown", (e) => {
@@ -158,6 +208,8 @@ document.addEventListener("click", () => {
 
 start();
 
+let closestPipe;
+
 const gameInteralId = setInterval(() => {
   for (let i = 0; i < birds.length; i++) {
     if (birds[i].y <= 0) {
@@ -167,35 +219,49 @@ const gameInteralId = setInterval(() => {
     }
   }
 
+  closestPipe = pipes[0];
+  if (closestPipe.x + 100 < birdA.x) {
+    closestPipe = pipes[1];
+  }
+
   for (let i = 0; i < pipes.length; i++) {
     pipes[i].x -= 1;
     pipes[i].sketch.style.left = pipes[i].x + "px";
 
-    if (pipes[i].x === 0) {
+    if (pipes[i].x === 0 && birds.includes(birdA)) {
       score++;
       score_HTML.innerText = score;
+    }
+    if (pipes[i].x === 0 && birds.includes(birdB)) {
+      cmp_score++;
+      cmp_score_HTML.innerText = cmp_score;
     }
     if (pipes[i].x + 100 <= 0) {
       pipes[i].delete();
       pipes.shift();
     }
-    if (birdA.x - pipes[i].x <= 100 && birdA.x + 60 - pipes[i].x >= 0) {
-      if (
-        !(birdA.y - pipes[i].y <= 150 && birdA.y - pipes[i].y >= 0) ||
-        birdA.y - pipes[i].y >= 110
-      ) {
-        game_over = true;
+
+    for (let k = 0; k < birds.length; k++) {
+      if (birds[k].x - pipes[i].x <= 100 && birds[k].x + 60 - pipes[i].x >= 0) {
+        if (
+          !(birds[k].y - pipes[i].y <= 150 && birds[k].y - pipes[i].y >= 0) ||
+          birds[k].y - pipes[i].y >= 110
+        ) {
+          birds[k].delete();
+        }
+      }
+      if (birds[k]?.y + 40 >= 500) {
+        birds[k]?.delete();
       }
     }
-    if (birdA.y + 40 >= 500) {
-      game_over = true;
-    }
 
-    if (game_over) {
-      game_over = false;
-      birdA.coordinates = [100, 100];
-      start();
-    }
-    if (pipes.length < 4) new Pipe();
+    game_over = birds.length === 0;
   }
+  if (game_over) {
+    game_over = false;
+    birdA.coordinates = [100, 100];
+    birdB.coordinates = [100, 100];
+    start();
+  }
+  if (pipes.length < 4) new Pipe();
 }, 1);
