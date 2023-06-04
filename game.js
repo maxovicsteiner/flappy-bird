@@ -88,7 +88,7 @@ class Bird {
     }, 1);
   }
 
-  delete() {
+  kill() {
     // delete from array and delete sketch
     birds = birds.filter((bird) => bird !== this);
     this.sketch.remove();
@@ -200,7 +200,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-document.addEventListener("click", () => {
+document.addEventListener("pointerdown", () => {
   if (!game_over) {
     birdA.flap();
   }
@@ -247,11 +247,11 @@ const gameInteralId = setInterval(() => {
           !(birds[k].y - pipes[i].y <= 150 && birds[k].y - pipes[i].y >= 0) ||
           birds[k].y - pipes[i].y >= 110
         ) {
-          birds[k].delete();
+          birds[k].kill();
         }
       }
       if (birds[k]?.y + 40 >= 500) {
-        birds[k]?.delete();
+        birds[k]?.kill();
       }
     }
 

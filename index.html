@@ -21,9 +21,19 @@
         <h2 id="cmp_score"></h2>
         <h2 id="cmp_high_score"></h2>
       </div>
+      <button id="restart">Restart</button>
     </div>
     <div id="game">
       <div id="pipes"></div>
     </div>
   </body>
+  <script>
+    const restartBtn = document.getElementById("restart");
+
+    restartBtn.addEventListener("click", () => {
+      birdA.kill();
+      birdB.kill();
+      start();
+    });
+  </script>
 </html>

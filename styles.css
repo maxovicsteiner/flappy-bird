@@ -88,9 +88,15 @@ h2 {
 .scores {
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 
 h1 {
   font-family: monospace;
   color: red;
+}
+
+#restart {
+  height: max-content;
+  font-size: 1.3rem;
 }
